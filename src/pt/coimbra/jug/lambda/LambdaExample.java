@@ -1,7 +1,5 @@
 package pt.coimbra.jug.lambda;
 
-import com.cortez.lambda.old.LambdaOld;
-
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -28,17 +26,20 @@ public class LambdaExample {
 
     public static void main(String[] args) {
         // Antigamente. Várias preocupações. Começar o ciclo, verificar variáveis. Pesadelos com IndexOutOfBoundsException.
+        System.out.println("\nFor normal");
         for (int i = 0; i < persons.size(); i++) {
             System.out.println(persons.get(i));
         }
 
         // Uma forma melhorada para percorrer os elementos, mas ainda assim sempre em controlo de tudo.
+        System.out.println("\nEnhanced for Loop");
         for (Person person : persons) {
             System.out.println(person);
         }
 
         // Deixamos de estar em controlo da iteração para apenas nos termos que preocupar com o comportamento que
         // pretendemos obter. No entanto esta forma é muito expressiva e requer demasiado código.
+        System.out.println("\nFor each com inner class");
         persons.stream()
                 .forEach(new Consumer<Person>() {
                     @Override
@@ -50,18 +51,26 @@ public class LambdaExample {
         // Primeiro Lambda. Composto por argumentos de entrada, um corpo e argumentos de saída. Neste caso o argumento de
         // entrada é o (Person person) a invocação é efectuada através da seta -> o corpo está dentro das chavetas {} e
         // não existem argumentos de saída. Ver java.util.function.Consumer.
+        System.out.println("\nFor each lambda");
         persons.stream()
                 .forEach((Person person) -> { System.out.println(person); });
 
         // Versão mais simplificada do Lambda. Não é necessário declarar o tipo Person e as chavetas podem ser omitida
         // se o corpo da função apenas tiver uma linha.
+        System.out.println("\nFor each lambda simplificado");
         persons.stream()
                 .forEach(person -> System.out.println(person));
 
         // No caso do lambda não fizer mais nada a não ser a chamada de outro método, é possível substituir o lambda
         // directamente pelo nome do método que queremos invocar.
+        System.out.println("\nFor each method reference");
         persons.stream()
                 .forEach(System.out::println);
+
+        System.out.println("\nPessoas com > 18 anos e ordenadas por nome");
+        complicatedExample();
+        System.out.println("\nPessoas com > 18 anos e ordenadas por nome usando lambdas");
+        simpleLambda();
     }
 
     // Nos seguinte exemplos, pretendemos filtrar as pessoas que tenham idade superior a 18, eliminar as duplicadas,
@@ -69,8 +78,6 @@ public class LambdaExample {
 
     // Como poderiamos fazer antes de Java 8.
     private static void complicatedExample() {
-        List<Person> persons = LambdaOld.persons;
-
         Set<Person> personsNoDuplicates = new HashSet<>();
         for (Person person : persons) {
             if (person.getAge() >= 18) {
@@ -93,8 +100,7 @@ public class LambdaExample {
 
     // Com Java 8.
     private static void simpleLambda() {
-        LambdaOld.persons
-                .stream()
+        persons.stream()
                 .filter(p -> p.getAge() >= 18)
                 .distinct()
                 .sorted(comparing(Person::getName))

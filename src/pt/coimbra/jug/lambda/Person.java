@@ -1,7 +1,5 @@
 package pt.coimbra.jug.lambda;
 
-import com.cortez.lambda.jug.lambda.action.LambdaAction;
-
 /**
  * @author Roberto Cortez
  */
