@@ -8,31 +8,42 @@ import java.util.List;
  */
 public class ParallelStream {
     public static void main(String[] args) {
-        // 1000 objectos que vou ter que processar
+        // 1000 objects to process.
         List<Stock> stocks = new ArrayList<>();
         for (int i = 0; i < 1000; i++) {
             stocks.add(new Stock());
         }
 
-        // De forma sequencial são 1000 invocações a 10 milisegundos cada uma. No mínimo 10 segundos.
-        long start = System.currentTimeMillis();
-        stocks.stream().forEach(Stock::getValue);
-        long end = System.currentTimeMillis();
-        System.out.println("sequencial: " + (end - start));
-
-        // Paralelo. Depende do números de processadores da máquina que está a correr o código. No pior caso será igual
-        // ao anterior.
-        start = System.currentTimeMillis();
-        stocks.parallelStream().forEach(Stock::getValue);
-        end = System.currentTimeMillis();
-        System.out.println("paralelo: " + (end - start));
+        sequentialStream(stocks);
+        parallelStream(stocks);
     }
 
-    // Apenas um objecto para simular o tempo de espera de processamento de uma invocação
+    private static void sequentialStream(List<Stock> stocks) {
+        long start = System.currentTimeMillis();
+
+        // In a sequential way, all the 1000 invocations are processed, taking at least 10 ms. We need at least 10 s to
+        // process all the objects.
+        stocks.stream().forEach(Stock::getValue);
+
+        long end = System.currentTimeMillis();
+        System.out.println("sequential: " + (end - start));
+    }
+
+    private static void parallelStream(List<Stock> stocks) {
+        long start = System.currentTimeMillis();
+
+        // Parallel stream. The processing now depends on how many cores the machine has.
+        stocks.parallelStream().forEach(Stock::getValue);
+
+        long end = System.currentTimeMillis();
+        System.out.println("parallel: " + (end - start));
+    }
+
+    // Just an object to simulate a waiting time.
     private static class Stock {
         public double getValue() {
             try {
-                // Espera 10 milisegundos
+                // Wait 10 ms.
                 Thread.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();

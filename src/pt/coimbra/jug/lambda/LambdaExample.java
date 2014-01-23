@@ -3,8 +3,7 @@ package pt.coimbra.jug.lambda;
 import java.util.*;
 import java.util.function.Consumer;
 
-import static java.util.Comparator.comparing;
-import static pt.coimbra.jug.lambda.Person.Gender.FEMALE;
+import static pt.coimbra.jug.lambda.Person.Gender.*;
 
 /**
  * @author Roberto Cortez
@@ -13,33 +12,33 @@ public class LambdaExample {
     private static List<Person> persons = new ArrayList<>();
 
     static {
-        persons.add(new Person("João", 20, Person.Gender.MALE));
-        persons.add(new Person("Pedro", 25, Person.Gender.MALE));
-        persons.add(new Person("Miguel", 10, Person.Gender.MALE));
-        persons.add(new Person("José", 45, Person.Gender.MALE));
-        persons.add(new Person("Rui", 75, Person.Gender.MALE));
-        persons.add(new Person("Maria", 32, FEMALE));
-        persons.add(new Person("Joana", 60, FEMALE));
-        persons.add(new Person("Rita", 5, FEMALE));
-        persons.add(new Person("Isabel", 37, FEMALE));
+        persons.add(new Person("John", 20, MALE));
+        persons.add(new Person("Michael", 25, MALE));
+        persons.add(new Person("Carl", 10, MALE));
+        persons.add(new Person("Paul", 45, MALE));
+        persons.add(new Person("Scott", 75, MALE));
+        persons.add(new Person("Anna", 90, FEMALE));
+        persons.add(new Person("Jessica", 60, FEMALE));
+        persons.add(new Person("Cindy", 5, FEMALE));
+        persons.add(new Person("Heather", 37, FEMALE));
     }
 
     public static void main(String[] args) {
-        // Antigamente. Várias preocupações. Começar o ciclo, verificar variáveis. Pesadelos com IndexOutOfBoundsException.
-        System.out.println("\nFor normal");
+        // Old way. Several concerns. Start the cycle, check variables. Nightmares with IndexOutOfBoundsException.
+        System.out.println("\nRegular for");
         for (int i = 0; i < persons.size(); i++) {
             System.out.println(persons.get(i));
         }
 
-        // Uma forma melhorada para percorrer os elementos, mas ainda assim sempre em controlo de tudo.
+        // Improved way to iterate elements, but we're still in control over the iteration.
         System.out.println("\nEnhanced for Loop");
         for (Person person : persons) {
             System.out.println(person);
         }
 
-        // Deixamos de estar em controlo da iteração para apenas nos termos que preocupar com o comportamento que
-        // pretendemos obter. No entanto esta forma é muito expressiva e requer demasiado código.
-        System.out.println("\nFor each com inner class");
+        // We're no longer in control over the iteration. We only need to worry with the behaviour that we want to
+        // implement. However this is a very expressive form and requires a lot of boiler plate code.
+        System.out.println("\nFor each inner class");
         persons.stream()
                 .forEach(new Consumer<Person>() {
                     @Override
@@ -48,35 +47,35 @@ public class LambdaExample {
                     }
                 });
 
-        // Primeiro Lambda. Composto por argumentos de entrada, um corpo e argumentos de saída. Neste caso o argumento de
-        // entrada é o (Person person) a invocação é efectuada através da seta -> o corpo está dentro das chavetas {} e
-        // não existem argumentos de saída. Ver java.util.function.Consumer.
+        // First lambda. We have arguments, body and return. Im this caase the argument is the (Person person). The
+        // invocation is performed using the arrow operator "->". The body is enclosed inside the brackets {} and there
+        // is no return type (it's void). Check java.util.function.Consumer.
         System.out.println("\nFor each lambda");
         persons.stream()
                 .forEach((Person person) -> { System.out.println(person); });
 
-        // Versão mais simplificada do Lambda. Não é necessário declarar o tipo Person e as chavetas podem ser omitida
-        // se o corpo da função apenas tiver uma linha.
-        System.out.println("\nFor each lambda simplificado");
+        // Simplified lambda. No need for Person type declaration and the enclosing brackets can be omitted if the body
+        // only had 1 line.
+        System.out.println("\nFor each simplified lambda");
         persons.stream()
                 .forEach(person -> System.out.println(person));
 
-        // No caso do lambda não fizer mais nada a não ser a chamada de outro método, é possível substituir o lambda
-        // directamente pelo nome do método que queremos invocar.
+        // If the lambda is only calling another method that matches the argument thats it's possible to replace it with
+        // a method reference and call the method using the operator "::".
         System.out.println("\nFor each method reference");
         persons.stream()
                 .forEach(System.out::println);
 
-        System.out.println("\nPessoas com > 18 anos e ordenadas por nome");
+        System.out.println("\nPersons with age > 18 and ordered by name the usual way");
         complicatedExample();
-        System.out.println("\nPessoas com > 18 anos e ordenadas por nome usando lambdas");
+        System.out.println("\nPersons with age > 18 and ordered by name using lambdas");
         simpleLambda();
     }
 
-    // Nos seguinte exemplos, pretendemos filtrar as pessoas que tenham idade superior a 18, eliminar as duplicadas,
-    // ordernar pelo nome e finalmente imprimir o nome.
+    // In the following examples we want to filter the persons with aga greater than 18, eliminate the duplicates,
+    // order by name and finally print the names.
 
-    // Como poderiamos fazer antes de Java 8.
+    // Before Java 8.
     private static void complicatedExample() {
         Set<Person> personsNoDuplicates = new HashSet<>();
         for (Person person : persons) {
@@ -98,12 +97,12 @@ public class LambdaExample {
         }
     }
 
-    // Com Java 8.
+    // With Java 8.
     private static void simpleLambda() {
         persons.stream()
                 .filter(p -> p.getAge() >= 18)
                 .distinct()
-                .sorted(comparing(Person::getName))
+                .sorted(Comparator.comparing(Person::getName))
                 .map(Person::getName)
                 .forEach(System.out::println);
     }
