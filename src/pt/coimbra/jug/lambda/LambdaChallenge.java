@@ -33,33 +33,33 @@ public class LambdaChallenge {
 
     // Count how many seconds you need to read the following code.
     private static void usualWay() {
-        Person oldest = null;
+        Person oldestMale = null;
         for (Person person : persons) {
-            if (oldest == null) {
+            if (oldestMale == null) {
                 if (person.getGender().equals(MALE)) {
-                    oldest = person;
+                    oldestMale = person;
                 }
             } else {
-                if (person.getAge() > oldest.getAge() && person.getGender().equals(MALE)) {
-                    oldest = person;
+                if (person.getAge() > oldestMale.getAge() && person.getGender().equals(MALE)) {
+                    oldestMale = person;
                 }
             }
         }
 
-        if (oldest == null) {
-            System.out.println("No persons!");
+        if (oldestMale == null) {
+            System.out.println("No males!");
         } else {
-            System.out.println(oldest.getName());
+            System.out.println(oldestMale.getName());
         }
     }
 
     // Now with lambdas and stream API. The code does the same thing. How longer did it took you in this form? :)
     private static void lambdaChallenge() {
-        String personName = persons.stream()
+        String maleName = persons.stream()
                                    .filter(p -> p.getGender().equals(MALE))
                                    .max(Comparator.comparing(Person::getAge))
                                    .map(Person::getName)
-                                   .orElse("No persons!");
-        System.out.println(personName);
+                                   .orElse("No males!");
+        System.out.println(maleName);
     }
 }
